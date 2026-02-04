@@ -11,26 +11,50 @@
 
 #include "./core/node.hpp"
 #include "./core/mesh.hpp"
+#include "./core/window.hpp"
 
 //DEBUG
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
+void glfw_init() {
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+}
+
+void glad_init() {    
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        exit(-1);
+    }
+}
+
 int main() {
-	Node3D root("sigma", glm::vec3(2,2,2));
-	root.init_root();
-
-	Node3D boba("boba", glm::vec3(1,1,1));
-	root.add_child(&boba);
+	glfw_init();
 	
-	Node3D biba("biba", glm::vec3(0,0,0), glm::vec3(1,0,0));
-	boba.add_child(&biba);
+	Window game_win;
+	game_win.init_window(1280, 720, "bark bark skibidi labubu");
 
-	//root.print_tree();
+	glad_init();
 
-	glm::mat4 smat = biba.get_global_matrix();
+	Mesh m(
+		std::vector<float>{-1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f},
+		std::vector<unsigned int>{1, 2, 3}
+	);
 
-	std::cout << glm::to_string(smat) << std::endl;
+	while(!glfwWindowShouldClose(game_win.window)) {
+		game_win.clear_window();
+		
+		m.draw();
+
+		game_win.swap_buffers();
+	}
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 FLGS = -O3 -flto
-CPP = main.cpp core/*.cpp
+CPP = main.cpp core/*.cpp include/glad.c
 LIB = -lglfw -lm
 
 a.elf: $(CPP)
