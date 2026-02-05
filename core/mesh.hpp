@@ -7,7 +7,10 @@ public:
 	unsigned int VAO, VBO, EBO;
 	unsigned int indices_count;
 
+	Shader shader;
+
 	Mesh(
+		Shader new_shader,
 		std::vector<float> vertices,
 		std::vector<unsigned int> indices,
 		std::string new_name = "Mesh",

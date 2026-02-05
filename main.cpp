@@ -9,13 +9,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "./core/old_shader.h"
+
 #include "./core/node.hpp"
 #include "./core/mesh.hpp"
 #include "./core/window.hpp"
-
-//DEBUG
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/string_cast.hpp>
 
 void glfw_init() {
 	glfwInit();
@@ -43,8 +41,13 @@ int main() {
 
 	glad_init();
 
+	
+	Shader tsh;
+	tsh.create_shader("/home/abobus1337/codeProjs/poor_godot_clone/shaders/test/tv.glsl", "/home/abobus1337/codeProjs/poor_godot_clone/shaders/test/tf.glsl");
+
 	Mesh m(
-		std::vector<float>{-1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f},
+		tsh,
+		std::vector<float>{-1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f},
 		std::vector<unsigned int>{1, 2, 3}
 	);
 
@@ -55,6 +58,9 @@ int main() {
 
 		game_win.swap_buffers();
 	}
+
+	m.kill();
+	tsh.kill_shader();
 
 	return 0;
 }

@@ -1,15 +1,23 @@
-FLGS = -O3 -flto
+RFLGS = -O3 -flto
+DFLGS = -Wall -Wextra -pedantic -O2
 CPP = main.cpp core/*.cpp include/glad.c
 LIB = -lglfw -lm
 
-a.elf: $(CPP)
-	g++ $(FLGS) $(CPP) -o a.elf $(LIB)
+a.dbg: $(CPP)
+	g++ $(DFLGS) $(CPP) -o a.dbg $(LIB)
 
-.PHONY = ct c
+a.rel: $(CPP)
+	g++ $(RFLGS) $(CPP) -o a.rel $(LIB)
 
-ct: a.elf
-	./a.elf
-	rm a.elf
+.PHONY = ct c crel
+
+rel: a.rel
+	./a.rel
+	rm a.rel
+
+ct: a.dbg
+	./a.dbg
+	rm a.dbg
 
 c: 
-	rm a.elf
+	rm a.dbg
