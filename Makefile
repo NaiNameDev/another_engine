@@ -1,6 +1,6 @@
 RFLGS = -O3 -flto
 DFLGS = -Wall -Wextra -pedantic -O2
-CPP = main.cpp core/*.cpp include/glad.c
+CPP = main.cpp core/*.cpp utils/*.cpp include/glad.c
 LIB = -lglfw -lm
 
 a.dbg: $(CPP)
@@ -11,7 +11,7 @@ a.rel: $(CPP)
 
 .PHONY = ct c crel
 
-rel: a.rel
+crel: a.rel
 	./a.rel
 	rm a.rel
 
