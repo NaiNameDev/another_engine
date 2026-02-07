@@ -20,8 +20,15 @@
 #include "./inits.cpp"
 
 int main() {
+	std::ifstream t("./test/obj/tc_not_trngltd.obj");
+	t.seekg(0, std::ios::end);
+	size_t size = t.tellg();
+	std::string buffer(size, ' ');
+	t.seekg(0);
+	t.read(&buffer[0], size); 
+
 	ObjReader rd;
-	rd.read_obj("sigmasfjf");
+	rd.read_file(buffer);
 	exit(0);
 
 	glfw_init();
