@@ -14,5 +14,8 @@ void glad_init() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(-1);
     }
+	
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 

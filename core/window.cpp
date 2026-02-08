@@ -25,7 +25,7 @@ void Window::init_window(int width, int height, std::string name, glm::vec4 colo
 }
 void Window::clear_window() {
 	glClearColor(fill_color.x, fill_color.y, fill_color.z, fill_color.w);
-	glClear(GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Window::swap_buffers() {
 	glfwSwapBuffers(window);

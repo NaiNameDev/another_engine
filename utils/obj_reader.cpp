@@ -15,21 +15,29 @@
 
 #include "obj_reader.hpp"
 
-void ObjReader::read_file(std::string file) {
+void ObjReader::import_file(std::string path) {
 	std::vector<float> tv = {}; //vertexes
 	std::vector<float> tn = {}; //noramls
 	std::vector<float> tu = {}; //UVs
 	
 	std::vector<float> over = {}; //out vertices
-	std::vector<unsigned int> oind = {}; //out indices
+	unsigned int vertex_cnt = 0;
 
-	char mod = '#';
+	char mod = ' ';
 	std::string word = "";
+
+	std::ifstream t(path);
+	t.seekg(0, std::ios::end);
+	size_t size = t.tellg();
+	std::string file(size, ' ');
+	t.seekg(0);
+	t.read(&file[0], size); 
 
 	for(int i = 0; i < file.length(); i++) {
 		switch(file[i]) {
 			case 's':
-				i++;
+				mod = ' ';
+				i+=2;
 				break;
 			case 'o':
 				mod = 'o';
@@ -44,17 +52,15 @@ void ObjReader::read_file(std::string file) {
 				switch(file[i + 1]) {
 					case 'n':
 						mod = 'n';
-						i+=2;
 						break;
 					case 't':
 						mod = 't';
-						i+=2;
 						break;
 					case ' ':
 						mod = 'v';
-						i+=2;
 						break;
 				}
+				i+=2;
 				break;
 		}
 			
@@ -62,22 +68,41 @@ void ObjReader::read_file(std::string file) {
 			if (word != "") {
 				switch(mod) {
 					case 'o':
-						std::cout << word << std::endl;
 						name = word;
 						break;
 					case 'v':
-						std::cout << word << std::endl;
 						tv.push_back(std::stof(word));
 						break;
 					case 'n':
-						std::cout << word << std::endl;
 						tn.push_back(std::stof(word));
 						break;
 					case 't':
-						std::cout << word << std::endl;
 						tu.push_back(std::stof(word));
 						break;
+					case 'f':
+						std::vector<int> tmp_nums = {};
+						std::string buffer = "";
 
+						for (char ch : word) {
+							if (ch != '/') {buffer.push_back(ch); continue;}
+							tmp_nums.push_back(std::stoi(buffer)); buffer = "";
+						}
+						tmp_nums.push_back(std::stoi(buffer));
+						
+						//vertexes
+						over.push_back(tv[tmp_nums[0] * 3 - 3]);
+						over.push_back(tv[tmp_nums[0] * 3 - 2]);
+						over.push_back(tv[tmp_nums[0] * 3 - 1]);
+						vertex_cnt+=3;
+						
+						//UVs
+						over.push_back(tu[tmp_nums[1] * 2 - 2]);
+						over.push_back(tu[tmp_nums[1] * 2 - 1]);
+						
+						//normals
+						over.push_back(tn[tmp_nums[2] * 3 - 3]);
+						over.push_back(tn[tmp_nums[2] * 3 - 2]);
+						over.push_back(tn[tmp_nums[2] * 3 - 1]);
 				}
 				word = "";
 			}
@@ -86,9 +111,9 @@ void ObjReader::read_file(std::string file) {
 	}
 
 	vertices = over;
-	indices = oind;
+	vertex_count = vertex_cnt;
 }
 
-Mesh ObjReader::create_mesh() {
-	
+Mesh ObjReader::create_mesh(Shader shd) {
+	return Mesh(shd, vertices, vertex_count, name);
 }

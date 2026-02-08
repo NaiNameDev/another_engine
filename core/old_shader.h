@@ -79,27 +79,27 @@ public:
     }
     // utility uniform functions
     // ------------------------------------------------------------------------
-    void setBool(const std::string &name, bool value) const
+    void set_bool(const std::string &name, bool value) const
     {         
         glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); 
     }
-	void setMat4(const std::string &name, glm::mat4 mat) const {
+	void set_mat4(const std::string &name, glm::mat4 mat) const {
 		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 	}
     // ------------------------------------------------------------------------
-    void setInt(const std::string &name, int value) const
+    void set_int(const std::string &name, int value) const
     { 
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value); 
     }
     // ------------------------------------------------------------------------
-    void setFloat(const std::string &name, float value) const
+    void set_float(const std::string &name, float value) const
     { 
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
     }
-	void setVec4(const std::string &name, glm::vec4 value) const {
+	void set_vec4(const std::string &name, glm::vec4 value) const {
         glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value)); 
 	}
-	void setVec3(const std::string &name, glm::vec3 value) const {
+	void set_vec3(const std::string &name, glm::vec3 value) const {
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value)); 
 	}
 	//kill shader
