@@ -28,6 +28,8 @@
 #define HEIGHT 720
 
 int main() {
+	stbi_set_flip_vertically_on_load(1);
+
 	glfw_init();
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	
@@ -37,25 +39,33 @@ int main() {
 	glad_init();
 
 	ObjReader rd;
-	rd.import_file("./test/obj/tv.obj");
+	rd.import_file("/home/abobus1337/Downloads/MIKU_MODEL/teto/source/tetokasane.obj");
 	
 	Shader tsh;
 	tsh.create_shader("./shaders/test/tv.glsl", "./shaders/test/tf.glsl");
 
-	Texture text1;
-	text1.import_texture("./test/png/tv.png");
+	Texture text1; text1.import_texture("./test/png/t1.png");
+	Texture text2; text2.import_texture("./test/png/t2.png");
+	Texture text3; text3.import_texture("./test/png/t4.png");
 
 	Mesh m = rd.create_mesh(tsh);
+	m.bind_texture(text2);
+	m.bind_texture(text1);
+	m.bind_texture(text2);
+	m.bind_texture(text1);
+	m.bind_texture(text2);
+	m.bind_texture(text3);
+	m.bind_texture(text1);
 	m.init_root();
-	m.position.z -= 20;
-	m.position.y += 0.5;
+	m.position.z -= 40;
+	m.position.y += 5;
 	m.rotation.z = 3.14;
+	m.scale = glm::vec3(0.1, 0.1, 0.1);
 
 	while(!glfwWindowShouldClose(game_win.window)) {
 		game_win.clear_window();
 		
 		m.rotation.y = glfwGetTime();
-		m.rotation.x = glfwGetTime() / 2;
 		
 		m.prepare_to_draw(FOV, WIDTH/HEIGHT);
 		m.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));

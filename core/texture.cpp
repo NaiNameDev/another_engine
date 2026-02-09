@@ -7,8 +7,6 @@
 #include "texture.hpp"
 
 void Texture::import_texture(std::string path) {
-	stbi_set_flip_vertically_on_load(1);
-
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 

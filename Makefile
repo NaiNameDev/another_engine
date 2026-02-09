@@ -1,5 +1,5 @@
 RFLGS = -O3 -flto
-DFLGS = -O2
+DFLGS = -O0
 CPP = main.cpp core/*.cpp utils/*.cpp include/glad.c
 LIB = -lglfw -lm
 

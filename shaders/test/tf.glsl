@@ -6,10 +6,12 @@ uniform vec3 obj_color;
 
 in vec3 sh_normal;
 in vec2 sh_UV;
+in float sh_mid;
 
 out vec4 FragColor;
 
-uniform sampler2D text1;
+#define MAX_TEXTURES 8
+uniform sampler2D textures[MAX_TEXTURES];
 
 void main() {
 	float ambient_strength = 0.1;
@@ -21,5 +23,7 @@ void main() {
 	vec3 diffuse = diff * light_color;
 			
 	vec3 result = (ambient + diffuse) * obj_color;
-	FragColor = texture(text1 ,sh_UV) * vec4(result, 1.0);
+	
+	//FragColor = vec4(float(a) / 7, float(a) / 7, float(a) / 7, 1.0f);
+	FragColor = texture(textures[int(round(sh_mid))] ,sh_UV) * vec4(result, 1.0);
 }

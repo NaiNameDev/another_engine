@@ -21,9 +21,7 @@ public:
 		glm::vec3 new_scale = glm::vec3(1.0f, 1.0f, 1.0f)
 	);
 
-	void bind_texture(Texture text) {
-		textures.push_back(text);
-	}
+	void bind_texture(Texture text);
 
 	void prepare_to_draw(float fov, float aspect);
 	void draw();

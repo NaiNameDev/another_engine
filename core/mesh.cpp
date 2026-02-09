@@ -30,15 +30,21 @@ Mesh::Mesh(
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(5 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 	glBindVertexArray(0);
+}
+
+void Mesh::bind_texture(Texture text) {
+	textures.push_back(text);
 }
 
 void Mesh::prepare_to_draw(float fov, float aspect){
@@ -50,12 +56,16 @@ void Mesh::prepare_to_draw(float fov, float aspect){
 }
 
 void Mesh::draw() {
-	int i = 0;
+	int i = 1;
 	for (Texture tx : textures) {
-		glActiveTexture(GL_TEXTURE0 + i);
+		std::string a = "textures[" + std::to_string(i) + "]";
+		
+		glActiveTexture(GL_TEXTURE0 + tx.texture);
 		glBindTexture(GL_TEXTURE_2D, tx.texture);
+		glUniform1i(glGetUniformLocation(shader.ID, a.c_str()), tx.texture);
 		i++;
 	}
+	
 	glBindVertexArray(VAO);	
 	glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 }
