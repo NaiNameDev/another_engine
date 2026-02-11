@@ -10,7 +10,7 @@ in float sh_mid;
 
 out vec4 FragColor;
 
-#define MAX_TEXTURES 8
+#define MAX_TEXTURES 16
 uniform sampler2D textures[MAX_TEXTURES];
 
 void main() {
@@ -25,5 +25,10 @@ void main() {
 	vec3 result = (ambient + diffuse) * obj_color;
 	
 	//FragColor = vec4(float(a) / 7, float(a) / 7, float(a) / 7, 1.0f);
-	FragColor = texture(textures[int(round(sh_mid))] ,sh_UV) * vec4(result, 1.0);
+	if (int(round(sh_mid)) >= 0) {
+		FragColor = texture(textures[int(round(sh_mid))] ,sh_UV) * vec4(result, 1.0);
+		return;
+	}
+	
+	FragColor = vec4(result, 1.0);
 }

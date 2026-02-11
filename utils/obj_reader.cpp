@@ -6,8 +6,6 @@
 #include "../include/glad.h"
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-
 #include "../core/old_shader.h"
 
 #include "../core/node.hpp"
@@ -19,7 +17,7 @@ void ObjReader::import_file(std::string path) {
 	std::vector<float> tv = {}; //vertexes
 	std::vector<float> tn = {}; //noramls
 	std::vector<float> tu = {}; //UVs
-	float material_ids_cnt = 0;
+	float material_ids_cnt = -1;
 
 	std::vector<float> over = {}; //out vertices
 	unsigned int vertex_cnt = 0;
@@ -103,6 +101,39 @@ void ObjReader::import_file(std::string path) {
 
 	vertices = over;
 	vertex_count = vertex_cnt;
+}
+
+void ObjReader::import_mtl_textures(std::string mtl_path, std::string textures_path, Mesh* msh) {
+	std::ifstream t(mtl_path);
+	t.seekg(0, std::ios::end);
+	size_t size = t.tellg();
+	std::string file(size, ' ');
+	t.seekg(0);
+	t.read(&file[0], size); 
+	
+	int found = 0;
+	std::string word;
+	std::vector<Texture> textures;
+
+	for(int i = 0; i < file.length(); i++) {
+		if (file[i] == ' ' || file[i] == '\n') {
+			if (word != "") {
+				if (found) {
+					Texture tx; tx.import_texture(textures_path + word);
+					textures.push_back(tx);
+					found = 0;
+				}
+				if (word == "map_Kd") {
+					found = 1;
+				}
+			}
+
+			word = "";
+		}
+		else word.push_back(file[i]);
+	}
+
+	msh->textures = textures;
 }
 
 Mesh ObjReader::create_mesh(Shader shd) {

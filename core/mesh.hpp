@@ -2,6 +2,7 @@
 
 #include "node.hpp"
 #include "texture.hpp"
+#include "camera.hpp"
 
 class Mesh : public Node3D {
 public:
@@ -23,7 +24,7 @@ public:
 
 	void bind_texture(Texture text);
 
-	void prepare_to_draw(float fov, float aspect);
+	void prepare_to_draw(glm::mat4 view, glm::mat4 proj);
 	void draw();
 	void kill();
 };

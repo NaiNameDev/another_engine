@@ -47,16 +47,16 @@ void Mesh::bind_texture(Texture text) {
 	textures.push_back(text);
 }
 
-void Mesh::prepare_to_draw(float fov, float aspect){
+void Mesh::prepare_to_draw(glm::mat4 view, glm::mat4 proj){
 	shader.use();
 	
 	shader.set_mat4("modl", get_global_matrix());
-	shader.set_mat4("view", glm::mat4(1.0f));
-	shader.set_mat4("proj", glm::perspective(fov, aspect, 0.1f, 100.0f));
+	shader.set_mat4("view", view);
+	shader.set_mat4("proj", proj);
 }
 
 void Mesh::draw() {
-	int i = 1;
+	int i = 0;
 	for (Texture tx : textures) {
 		std::string a = "textures[" + std::to_string(i) + "]";
 		

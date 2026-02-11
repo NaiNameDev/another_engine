@@ -33,6 +33,5 @@ public:
 	);
 
 	virtual glm::mat4 get_local_matrix();
-
-	static glm::mat4 standart_proj();
+	glm::vec3 get_global_position();
 };
