@@ -17,5 +17,5 @@ public:
 	);
 
 	glm::mat4 get_view();
-	void create_proj_matrix(float fov = 90.0f, float aspect = 16/9, float near = 0.1f, float far = 100.0f);
+	void create_proj_matrix(float fov = 90.0f, float aspect = 1.77777f, float near = 0.1f, float far = 100.0f);
 };

@@ -1,13 +1,13 @@
-RFLGS = -O3 -flto
+RFLGS = -O3 -flto -DNDEBUG=1
 DFLGS = -O0
-CPP = main.cpp core/*.cpp utils/*.cpp include/glad.c
+CPP = main.cpp core/*.cpp core/debug/*.cpp utils/*.cpp include/glad.c
 LIB = -lglfw -lm
-
-a.dbg: $(CPP)
-	g++ $(DFLGS) $(CPP) -o a.dbg $(LIB)
 
 a.rel: $(CPP)
 	g++ $(RFLGS) $(CPP) -o a.rel $(LIB)
+
+a.dbg: $(CPP)
+	g++ $(DFLGS) $(CPP) -o a.dbg $(LIB)
 
 .PHONY = ct c crel
 

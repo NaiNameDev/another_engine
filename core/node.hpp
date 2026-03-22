@@ -16,6 +16,7 @@ public:
 	void add_child(Node* child);
 	
 	glm::mat4 get_global_matrix();
+	glm::mat4 get_up_tree_matrix();
 	virtual glm::mat4 get_local_matrix();
 };
 
@@ -33,5 +34,6 @@ public:
 	);
 
 	virtual glm::mat4 get_local_matrix();
+	glm::vec3 to_global(glm::vec3 pos);
 	glm::vec3 get_global_position();
 };

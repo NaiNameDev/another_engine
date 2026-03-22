@@ -19,17 +19,17 @@ Camera3D::Camera3D(
 }
 
 glm::mat4 Camera3D::get_view() {
-	glm::mat4 global = get_global_matrix();
+	glm::vec3 gp = get_global_position();
 
 	glm::mat4 ret = glm::lookAt(
-		glm::vec3(global * glm::vec4(position, 1.0f)),
-		glm::vec3(global * glm::vec4(position, 1.0f)) + glm::mat3(global) * dir,
-		glm::mat3(global) * up
+		gp,
+		gp + to_global(dir),
+		up
 	);
 
 	return ret;
 }
 
 void Camera3D::create_proj_matrix(float fov, float aspect, float near, float far) {
-	proj_matrix = glm::perspective(fov, aspect, near, far);
+	proj_matrix = glm::perspective(glm::radians(fov), aspect, near, far);
 }

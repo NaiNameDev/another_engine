@@ -51,6 +51,15 @@ glm::mat4 Node::get_global_matrix() {
 
 	return ret;
 }
+glm::mat4 Node::get_up_tree_matrix() {
+	glm::mat4 ret = glm::mat4(1.0f);
+
+	if (parant != this) {
+		ret = parant->get_global_matrix() * ret;
+	}
+
+	return ret;
+}
 glm::mat4 Node::get_local_matrix() {
 	return glm::mat4(0.0f);
 }
@@ -69,7 +78,10 @@ Node3D::Node3D(
 }
 
 glm::vec3 Node3D::get_global_position() {
-	return glm::vec3(get_global_matrix() * glm::vec4(position, 1.0f));
+	return glm::vec3(get_up_tree_matrix() * glm::vec4(position, 1.0f));
+}
+glm::vec3 Node3D::to_global(glm::vec3 pos) {
+	return pos * glm::mat3(get_global_matrix());
 }
 glm::mat4 Node3D::get_local_matrix() {
 	glm::mat4 ret(1.0f);

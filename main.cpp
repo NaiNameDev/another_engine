@@ -17,7 +17,10 @@
 #include "./core/texture.hpp"
 #include "./core/camera.hpp"
 
+#include "./core/debug/noclip_camera.hpp"
+
 #include "./utils/obj_reader.hpp"
+#include "./utils/input.hpp"
 
 #include "./inits.cpp"
 
@@ -25,8 +28,20 @@
 #include "./include/stb_image.h"
 
 #define FOV 100.0f
-#define WIDTH 1280
-#define HEIGHT 720
+#define WIDTH 1920.0f
+#define HEIGHT 1080.0f
+
+#if !defined(NDEBUG)
+#define DBG
+#endif
+
+float mouse_x = 0;
+float mouse_y = 0;
+
+void mouse_callback(GLFWwindow* window, double x, double y) {
+	mouse_x = static_cast<float>(x);
+    mouse_y = static_cast<float>(y);
+}
 
 int main() {
 	//init
@@ -34,34 +49,39 @@ int main() {
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	stbi_set_flip_vertically_on_load(1);
 	
+	#ifdef DBG
+	std::cout << "DEBUG MODE\n";
+	#else
+	std::cout << "RELEASE MODE\n";
+	#endif
+
 	Window game_win;
-	game_win.init_window(WIDTH, HEIGHT, "bark bark skibidi labubu", glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
-	
+	game_win.init_window(WIDTH, HEIGHT, "mw", glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+
 	glad_init();
+	glfwSetCursorPosCallback(game_win.window, mouse_callback);
+	glfwSetInputMode(game_win.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
 
 	//pre_render
 	Shader tsh;
 	tsh.create_shader("./shaders/test/tv.glsl", "./shaders/test/tf.glsl");
 
 	ObjReader rd;
-	rd.import_file("./test/obj/tc.obj");
+	rd.import_obj("./test/obj/tetokasane.obj");
+	//rd.import_obj("./test/obj/tc.obj");
 	Mesh m = rd.create_mesh(tsh);
-	rd.import_file("./test/obj/tmo.obj");
-	Mesh m2 = rd.create_mesh(tsh);
-	//rd.import_mtl_textures("./test/mtl/tetokasane.mtl", "./test/mtl/", &m);
-	
+	m.position.y -= 5.0f;
+	m.scale = glm::vec3(0.05f, 0.05f, 0.05f);
+	rd.import_mtl_textures("./test/mtl/tetokasane.mtl", "./test/mtl/", &m);
+	m.position.z -= 4.0;
+
 	m.init_root();
-	m.add_child(&m2);
 	
-	m.position.z -= 10;
-	m.position.x -= 4;
-	m2.position.x -= 4;
-	
-	Camera3D mc;
+	NoclipCamera mc;
 	mc.init_root();
 	mc.create_proj_matrix(FOV, WIDTH/HEIGHT);
-	mc.position.z += 20;
-
 
 	//main loop
 	float delta = 0;
@@ -70,23 +90,15 @@ int main() {
 		//delta
 		delta = glfwGetTime() - last_frame;
 		last_frame = glfwGetTime();
-		std::cout << delta << "d & " << 1 / delta << "f\n";
+		//std::cout << delta << "d & " << 1 / delta << "f\n";
 
 		//prepare to draw
 		game_win.clear_window();
-
-		m2.rotation.z = glfwGetTime();
-		m.rotation.y = glfwGetTime()/2.12;
-		m.rotation.x = cos(glfwGetTime()) * 10;
-		
+		//mc.rotation.y = glfwGetTime();
+		mc.mouse_input(mouse_x, mouse_y);
+		mc.move(delta, game_win.window);
 
 		//draw
-		m2.prepare_to_draw(mc.get_view(), mc.proj_matrix);
-		m2.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));
-		m2.shader.set_vec3("light_color", glm::vec3(1.0f,1.0f,1.0f));
-		m2.shader.set_vec3("obj_color", glm::vec3(1.0,1.0f,1.0f));
-		m2.draw();
-
 		m.prepare_to_draw(mc.get_view(), mc.proj_matrix);
 		m.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));
 		m.shader.set_vec3("light_color", glm::vec3(1.0f,1.0f,1.0f));
@@ -99,6 +111,8 @@ int main() {
 	//exit
 	m.kill();
 	tsh.kill_shader();
+
+	glfwTerminate();
 
 	return 0;
 }

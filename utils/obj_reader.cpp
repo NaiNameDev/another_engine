@@ -13,7 +13,7 @@
 
 #include "obj_reader.hpp"
 
-void ObjReader::import_file(std::string path) {
+void ObjReader::import_obj(std::string path) {
 	std::vector<float> tv = {}; //vertexes
 	std::vector<float> tn = {}; //noramls
 	std::vector<float> tu = {}; //UVs

@@ -7,7 +7,7 @@
 
 #include "window.hpp"
 
-void Window::frame_size_callback(GLFWwindow* win, int width, int height) {
+void frame_size_callback(GLFWwindow* win, int width, int height) {
 	glViewport(0,0, width, height);
 }
 
