@@ -22,12 +22,16 @@ NoclipCamera::NoclipCamera(
 
 	yw = 0;
 	ph = 0;
+
+	mouse_state = true;
 }
 
 void NoclipCamera::mouse_input(float x, float y) {
-	rotation.y += glm::radians((x - lx) * 0.1f);
-	rotation.x += glm::radians((y - ly) * 0.1f);
-	rotation.x = glm::clamp(rotation.x, glm::radians(-89.0f), glm::radians(89.0f));
+	if (mouse_state) {
+		rotation.y += glm::radians((x - lx) * 0.1f);
+		rotation.x += glm::radians((y - ly) * 0.1f);
+		rotation.x = glm::clamp(rotation.x, glm::radians(-89.0f), glm::radians(89.0f));
+	}
 
 	lx = x;
 	ly = y;
@@ -46,4 +50,13 @@ void NoclipCamera::move(float delta, GLFWwindow* win) {
 	
 	if (Input::is_action_pressed(win, GLFW_KEY_SPACE)) position  += speed * up;
 	if (Input::is_action_pressed(win, GLFW_KEY_LEFT_SHIFT)) position -= speed * up;
+	
+	if (Input::is_action_pressed(win, GLFW_KEY_Y)) {
+		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		mouse_state = false;
+	}
+	if (Input::is_action_pressed(win, GLFW_KEY_I)) { 
+		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		mouse_state = true;
+	}
 }

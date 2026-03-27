@@ -139,3 +139,8 @@ void ObjReader::import_mtl_textures(std::string mtl_path, std::string textures_p
 Mesh ObjReader::create_mesh(Shader shd) {
 	return Mesh(shd, vertices, vertex_count, name);
 }
+
+void ObjReader::clear() {
+	vertices.clear();
+	vertex_count = 0;
+}

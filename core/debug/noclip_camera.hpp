@@ -15,6 +15,8 @@ public:
 	float ly;
 	float sensitivity;
 
+	bool mouse_state;
+
 	NoclipCamera(
 		float new_sensitivity = 0.05f,
 		glm::vec3 new_up = glm::vec3(0.0f, 1.0f, 0.0f),

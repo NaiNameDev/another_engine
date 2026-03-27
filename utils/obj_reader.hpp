@@ -9,6 +9,7 @@ public:
 
 	void import_obj(std::string path);
 	void import_mtl_textures(std::string mtl_path, std::string textures_path, Mesh* msh);
+	void clear();
 
 	Mesh create_mesh(Shader shd);
 };

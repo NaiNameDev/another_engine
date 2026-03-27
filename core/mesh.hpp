@@ -26,5 +26,6 @@ public:
 
 	void prepare_to_draw(glm::mat4 view, glm::mat4 proj);
 	void draw();
+	void draw_on_top();
 	void kill();
 };

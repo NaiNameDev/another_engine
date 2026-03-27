@@ -69,6 +69,22 @@ void Mesh::draw() {
 	glBindVertexArray(VAO);	
 	glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 }
+void Mesh::draw_on_top() {
+	glDisable(GL_DEPTH_TEST);
+	int i = 0;
+	for (Texture tx : textures) {
+		std::string a = "textures[" + std::to_string(i) + "]";
+		
+		glActiveTexture(GL_TEXTURE0 + tx.texture);
+		glBindTexture(GL_TEXTURE_2D, tx.texture);
+		glUniform1i(glGetUniformLocation(shader.ID, a.c_str()), tx.texture);
+		i++;
+	}
+	
+	glBindVertexArray(VAO);	
+	glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+	glEnable(GL_DEPTH_TEST);
+}
 
 void Mesh::kill() {
 	glDeleteVertexArrays(1, &VAO);

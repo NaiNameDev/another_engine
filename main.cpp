@@ -22,10 +22,10 @@
 #include "./utils/obj_reader.hpp"
 #include "./utils/input.hpp"
 
-#include "./inits.cpp"
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "./include/stb_image.h"
+
+#include "./inits.cpp"
 
 #define FOV 100.0f
 #define WIDTH 1920.0f
@@ -46,14 +46,10 @@ void mouse_callback(GLFWwindow* window, double x, double y) {
 int main() {
 	//init
 	glfw_init();
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	stbi_set_flip_vertically_on_load(1);
 	
-	#ifdef DBG
+#ifdef DBG
 	std::cout << "DEBUG MODE\n";
-	#else
-	std::cout << "RELEASE MODE\n";
-	#endif
+#endif
 
 	Window game_win;
 	game_win.init_window(WIDTH, HEIGHT, "mw", glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
@@ -70,7 +66,6 @@ int main() {
 
 	ObjReader rd;
 	rd.import_obj("./test/obj/tetokasane.obj");
-	//rd.import_obj("./test/obj/tc.obj");
 	Mesh m = rd.create_mesh(tsh);
 	m.position.y -= 5.0f;
 	m.scale = glm::vec3(0.05f, 0.05f, 0.05f);
@@ -79,6 +74,11 @@ int main() {
 
 	m.init_root();
 	
+	rd.import_obj("./editor/models/move_cursor.obj");
+	Mesh cube = rd.create_mesh(tsh);
+	cube.position = m.position;
+	cube.init_root();
+
 	NoclipCamera mc;
 	mc.init_root();
 	mc.create_proj_matrix(FOV, WIDTH/HEIGHT);
@@ -94,7 +94,6 @@ int main() {
 
 		//prepare to draw
 		game_win.clear_window();
-		//mc.rotation.y = glfwGetTime();
 		mc.mouse_input(mouse_x, mouse_y);
 		mc.move(delta, game_win.window);
 
@@ -104,6 +103,12 @@ int main() {
 		m.shader.set_vec3("light_color", glm::vec3(1.0f,1.0f,1.0f));
 		m.shader.set_vec3("obj_color", glm::vec3(1.0,1.0f,1.0f));
 		m.draw();
+
+		cube.prepare_to_draw(mc.get_view(), mc.proj_matrix);
+		m.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));
+		m.shader.set_vec3("light_color", glm::vec3(1.0f,1.0f,1.0f));
+		m.shader.set_vec3("obj_color", glm::vec3(1.0,1.0f,1.0f));
+		cube.draw_on_top();
 
 		game_win.swap_buffers();
 	}
