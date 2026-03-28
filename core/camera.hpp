@@ -5,6 +5,14 @@ public:
 	glm::vec3 up;
 	glm::vec3 dir;
 	
+	float fov;
+	float aspect;
+	float near;
+	float far;
+
+	float width;
+	float height;
+
 	glm::mat4 proj_matrix;
 
 	Camera3D(
@@ -17,5 +25,7 @@ public:
 	);
 
 	glm::mat4 get_view();
-	void create_proj_matrix(float fov = 90.0f, float aspect = 1.77777f, float near = 0.1f, float far = 100.0f);
+	void create_proj_matrix(float mwidth, float mheight, float mfov = 90.0f, float mnear = 0.1f, float mfar = 100.0f);
+
+	glm::vec3 get_mouse_ray(float mouse_x, float mouse_y);
 };

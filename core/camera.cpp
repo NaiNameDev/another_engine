@@ -30,6 +30,18 @@ glm::mat4 Camera3D::get_view() {
 	return ret;
 }
 
-void Camera3D::create_proj_matrix(float fov, float aspect, float near, float far) {
-	proj_matrix = glm::perspective(glm::radians(fov), aspect, near, far);
+void Camera3D::create_proj_matrix(float mwidth, float mheight, float mfov, float mnear, float mfar) {
+	proj_matrix = glm::perspective(glm::radians(mfov), mwidth / mheight, mnear, mfar);
+	fov = mfov;
+	aspect = mwidth / mheight;
+	near = mnear;
+	far = mfar;
+
+	width = mwidth;
+	height = mheight;
+}
+
+glm::vec3 Camera3D::get_mouse_ray(float mouse_x, float mouse_y) {
+	float near_height = tan(glm::radians(fov / 2.0f)) * near;
+	return glm::normalize(glm::vec3(near_height * 3.141592f * (mouse_x / width - 0.5f), near_height * (mouse_y / height - 0.5f) * -aspect, -near));
 }

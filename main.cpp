@@ -44,13 +44,12 @@ void mouse_callback(GLFWwindow* window, double x, double y) {
 }
 
 int main() {
-	//init
-	glfw_init();
-	
 #ifdef DBG
 	std::cout << "DEBUG MODE\n";
 #endif
-
+	//init
+	glfw_init();
+	
 	Window game_win;
 	game_win.init_window(WIDTH, HEIGHT, "mw", glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
@@ -67,6 +66,7 @@ int main() {
 	ObjReader rd;
 	rd.import_obj("./test/obj/tetokasane.obj");
 	Mesh m = rd.create_mesh(tsh);
+	m.name = "TETOKASANE!!";
 	m.position.y -= 5.0f;
 	m.scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	rd.import_mtl_textures("./test/mtl/tetokasane.mtl", "./test/mtl/", &m);
@@ -81,7 +81,7 @@ int main() {
 
 	NoclipCamera mc;
 	mc.init_root();
-	mc.create_proj_matrix(FOV, WIDTH/HEIGHT);
+	mc.create_proj_matrix(WIDTH, HEIGHT, FOV);
 
 	//main loop
 	float delta = 0;
@@ -97,6 +97,8 @@ int main() {
 		mc.mouse_input(mouse_x, mouse_y);
 		mc.move(delta, game_win.window);
 
+		//glm::vec3 mr = mc.get_mouse_ray(mouse_x, mouse_y, WIDTH, HEIGHT);
+
 		//draw
 		m.prepare_to_draw(mc.get_view(), mc.proj_matrix);
 		m.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));
@@ -105,16 +107,17 @@ int main() {
 		m.draw();
 
 		cube.prepare_to_draw(mc.get_view(), mc.proj_matrix);
-		m.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));
-		m.shader.set_vec3("light_color", glm::vec3(1.0f,1.0f,1.0f));
-		m.shader.set_vec3("obj_color", glm::vec3(1.0,1.0f,1.0f));
-		cube.draw_on_top();
+		cube.shader.set_vec3("light_dir", glm::vec3(0.0f,0.0f,1.0f));
+		cube.shader.set_vec3("light_color", glm::vec3(1.0f,1.0f,1.0f));
+		cube.shader.set_vec3("obj_color", glm::vec3(1.0,1.0f,1.0f));
+		cube.draw();
 
 		game_win.swap_buffers();
 	}
 
 	//exit
 	m.kill();
+	cube.kill();
 	tsh.kill_shader();
 
 	glfwTerminate();
