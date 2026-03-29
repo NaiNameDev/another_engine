@@ -36,4 +36,5 @@ public:
 	virtual glm::mat4 get_local_matrix();
 	glm::vec3 to_global(glm::vec3 pos);
 	glm::vec3 get_global_position();
+	glm::vec3 get_global_rotation();
 };

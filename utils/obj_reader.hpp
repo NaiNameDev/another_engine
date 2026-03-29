@@ -4,6 +4,10 @@ class ObjReader {
 public:
 	std::vector<float> vertices; // 3 float vertexes, 2 floats UV, 1 float materal_id, 3 floats normals
 	unsigned int vertex_count;
+	
+	std::vector<float> vertexes;
+	std::vector<float> normals;
+	std::vector<float> UVs;
 
 	std::string name;
 
@@ -12,4 +16,5 @@ public:
 	void clear();
 
 	Mesh create_mesh(Shader shd);
+	CollisionMesh create_collision_mesh();
 };

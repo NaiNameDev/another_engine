@@ -80,6 +80,9 @@ Node3D::Node3D(
 glm::vec3 Node3D::get_global_position() {
 	return glm::vec3(get_up_tree_matrix() * glm::vec4(position, 1.0f));
 }
+glm::vec3 Node3D::get_global_rotation() {
+	return glm::mat3(get_up_tree_matrix()) * rotation;
+}
 glm::vec3 Node3D::to_global(glm::vec3 pos) {
 	return pos * glm::mat3(get_global_matrix());
 }
@@ -93,6 +96,6 @@ glm::mat4 Node3D::get_local_matrix() {
 	ret = glm::rotate(ret, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 	ret = glm::rotate(ret, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 	ret = glm::rotate(ret, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
+	
 	return ret;
 }

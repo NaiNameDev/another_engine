@@ -1,6 +1,6 @@
 RFLGS = -O3 -flto -DNDEBUG=1
 DFLGS = -O0
-CPP = main.cpp core/*.cpp core/debug/*.cpp utils/*.cpp include/glad.c
+CPP = main.cpp core/*.cpp core/debug/*.cpp physics/*.cpp utils/*.cpp include/glad.c
 LIB = -lglfw -lm
 
 a.rel: $(CPP)

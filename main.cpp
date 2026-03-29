@@ -6,8 +6,8 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "./core/old_shader.h"
 
@@ -16,6 +16,8 @@
 #include "./core/window.hpp"
 #include "./core/texture.hpp"
 #include "./core/camera.hpp"
+
+#include "./physics/collision_shape.hpp"
 
 #include "./core/debug/noclip_camera.hpp"
 
@@ -64,15 +66,17 @@ int main() {
 	tsh.create_shader("./shaders/test/tv.glsl", "./shaders/test/tf.glsl");
 
 	ObjReader rd;
-	rd.import_obj("./test/obj/tetokasane.obj");
+	rd.import_obj("./test/obj/tc.obj");
 	Mesh m = rd.create_mesh(tsh);
+	CollisionMesh cm = rd.create_collision_mesh();
+
 	m.name = "TETOKASANE!!";
-	m.position.y -= 5.0f;
-	m.scale = glm::vec3(0.05f, 0.05f, 0.05f);
+	//m.position.y -= 5.0f;
+	//m.scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	rd.import_mtl_textures("./test/mtl/tetokasane.mtl", "./test/mtl/", &m);
-	m.position.z -= 4.0;
 
 	m.init_root();
+	m.add_child(&cm);
 	
 	rd.import_obj("./editor/models/move_cursor.obj");
 	Mesh cube = rd.create_mesh(tsh);
@@ -91,13 +95,16 @@ int main() {
 		delta = glfwGetTime() - last_frame;
 		last_frame = glfwGetTime();
 		//std::cout << delta << "d & " << 1 / delta << "f\n";
+		
+		if (cm.is_coliding_with_ray(mc.get_global_position(), mc.get_mouse_ray(mouse_x, mouse_y))){
+			std::cout << "touch\n";
+		}
+		else std::cout << "bruh\n";
 
 		//prepare to draw
 		game_win.clear_window();
 		mc.mouse_input(mouse_x, mouse_y);
 		mc.move(delta, game_win.window);
-
-		//glm::vec3 mr = mc.get_mouse_ray(mouse_x, mouse_y, WIDTH, HEIGHT);
 
 		//draw
 		m.prepare_to_draw(mc.get_view(), mc.proj_matrix);

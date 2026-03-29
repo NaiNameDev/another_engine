@@ -10,6 +10,7 @@
 
 #include "../core/node.hpp"
 #include "../core/mesh.hpp"
+#include "../physics/collision_shape.hpp"
 
 #include "obj_reader.hpp"
 
@@ -99,8 +100,14 @@ void ObjReader::import_obj(std::string path) {
 		else word.push_back(file[i]);
 	}
 
+	//for draw mesh
 	vertices = over;
 	vertex_count = vertex_cnt;
+	
+	//for collsion mesh
+	vertexes = tv;
+	UVs = tu;
+	normals = tn;
 }
 
 void ObjReader::import_mtl_textures(std::string mtl_path, std::string textures_path, Mesh* msh) {
@@ -138,6 +145,9 @@ void ObjReader::import_mtl_textures(std::string mtl_path, std::string textures_p
 
 Mesh ObjReader::create_mesh(Shader shd) {
 	return Mesh(shd, vertices, vertex_count, name);
+}
+CollisionMesh ObjReader::create_collision_mesh() {
+	return CollisionMesh(vertexes, normals);
 }
 
 void ObjReader::clear() {
