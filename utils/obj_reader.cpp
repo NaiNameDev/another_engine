@@ -15,6 +15,7 @@
 #include "obj_reader.hpp"
 
 void ObjReader::import_obj(std::string path) {
+	clear();
 	std::vector<float> tv = {}; //vertexes
 	std::vector<float> tn = {}; //noramls
 	std::vector<float> tu = {}; //UVs
@@ -74,6 +75,10 @@ void ObjReader::import_obj(std::string path) {
 							tmp_nums.push_back(std::stoi(buffer));
 							
 							//vertexes
+							vertexes.push_back(tv[tmp_nums[0] * 3 - 3]);
+							vertexes.push_back(tv[tmp_nums[0] * 3 - 2]);
+							vertexes.push_back(tv[tmp_nums[0] * 3 - 1]);
+
 							over.push_back(tv[tmp_nums[0] * 3 - 3]);
 							over.push_back(tv[tmp_nums[0] * 3 - 2]);
 							over.push_back(tv[tmp_nums[0] * 3 - 1]);
@@ -87,6 +92,10 @@ void ObjReader::import_obj(std::string path) {
 							over.push_back(material_ids_cnt);
 							
 							//normals
+							normals.push_back(tn[tmp_nums[2] * 3 - 3]);
+							normals.push_back(tn[tmp_nums[2] * 3 - 2]);
+							normals.push_back(tn[tmp_nums[2] * 3 - 1]);
+							
 							over.push_back(tn[tmp_nums[2] * 3 - 3]);
 							over.push_back(tn[tmp_nums[2] * 3 - 2]);
 							over.push_back(tn[tmp_nums[2] * 3 - 1]);
@@ -103,11 +112,6 @@ void ObjReader::import_obj(std::string path) {
 	//for draw mesh
 	vertices = over;
 	vertex_count = vertex_cnt;
-	
-	//for collsion mesh
-	vertexes = tv;
-	UVs = tu;
-	normals = tn;
 }
 
 void ObjReader::import_mtl_textures(std::string mtl_path, std::string textures_path, Mesh* msh) {
@@ -152,5 +156,7 @@ CollisionMesh ObjReader::create_collision_mesh() {
 
 void ObjReader::clear() {
 	vertices.clear();
+	vertexes.clear();
+	normals.clear();
 	vertex_count = 0;
 }

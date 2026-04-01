@@ -7,7 +7,6 @@ public:
 	
 	std::vector<float> vertexes;
 	std::vector<float> normals;
-	std::vector<float> UVs;
 
 	std::string name;
 

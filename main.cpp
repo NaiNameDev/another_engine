@@ -70,10 +70,10 @@ int main() {
 	Mesh m = rd.create_mesh(tsh);
 	CollisionMesh cm = rd.create_collision_mesh();
 
-	m.name = "TETOKASANE!!";
+	//m.name = "TETOKASANE!!";
 	//m.position.y -= 5.0f;
 	//m.scale = glm::vec3(0.05f, 0.05f, 0.05f);
-	rd.import_mtl_textures("./test/mtl/tetokasane.mtl", "./test/mtl/", &m);
+	//rd.import_mtl_textures("./test/mtl/tetokasane.mtl", "./test/mtl/", &m);
 
 	m.init_root();
 	m.add_child(&cm);
@@ -94,12 +94,14 @@ int main() {
 		//delta
 		delta = glfwGetTime() - last_frame;
 		last_frame = glfwGetTime();
+
 		//std::cout << delta << "d & " << 1 / delta << "f\n";
-		
 		if (cm.is_coliding_with_ray(mc.get_global_position(), mc.get_mouse_ray(mouse_x, mouse_y))){
-			std::cout << "touch\n";
+			std::cout << "teto\n";
 		}
-		else std::cout << "bruh\n";
+		else std::cout << "no teto\n";
+		
+		//cube.position = cm.dbg(mc.get_global_position(), mc.to_global(mc.get_mouse_ray(mouse_x, mouse_y)));
 
 		//prepare to draw
 		game_win.clear_window();

@@ -25,4 +25,5 @@ public:
 	);
 
 	bool is_coliding_with_ray(glm::vec3 ro, glm::vec3 rd);
+	glm::vec3 dbg(glm::vec3 ro, glm::vec3 rd);
 };
